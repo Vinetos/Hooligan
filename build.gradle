@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+version = '0.0.1'
+group = 'com.safexty'
+mainClassName = 'com.safexty.hooligan.Hooligan'
+
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-common', version: '4.7.3'
+    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-core', version: '4.7.3'
+    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-opt', version: '4.7.3'
+    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-proxy', version: '4.7.3'
+    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-remoting', version: '4.7.3'
+
+    testImplementation 'junit:junit:4.12'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': rootProject.name, 'Implementation-Version': version, 'Main-Class': mainClassName
+    }
+}
