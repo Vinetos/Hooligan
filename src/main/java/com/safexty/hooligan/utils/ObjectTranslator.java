@@ -68,6 +68,7 @@ public class ObjectTranslator {
             // The null case
             if (valueObj == null) {
                 buffer.append("null");
+                pairEmitted = true;
                 continue;
             }
             String value = valueObj.toString();
