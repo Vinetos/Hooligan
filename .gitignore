@@ -115,7 +115,7 @@ hs_err_pid*
 ### Gradle ###
 .gradle
 *.iws
-out/
+out/*
 
 # Ignore Gradle GUI config
 gradle-app.setting
