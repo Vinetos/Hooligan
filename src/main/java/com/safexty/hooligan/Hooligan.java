@@ -24,6 +24,7 @@ public class Hooligan {
         Command command = Command.getCommandFromString(args[0]);
         args = Arrays.copyOfRange(args, 1, args.length); //Extract command from array
         AMFConnection amfConnection = new AMFConnection();
+        boolean error = false;
         try {
             amfConnection.connect(GATEWAY_URL);
             amfConnection.addHttpRequestHeader("Content-type", "application/x-amf");
@@ -42,8 +43,11 @@ public class Hooligan {
 
         } catch (ClientStatusException | ServerStatusException e) {
             e.printStackTrace();
+            error = true;
         } finally {
             amfConnection.close();
+            if (error)
+                error("Client or server got an error.");
         }
     }
 
