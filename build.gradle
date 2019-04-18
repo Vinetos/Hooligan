@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'java-library'
 }
 
 version = '0.0.1'
@@ -18,11 +19,11 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-common', version: '4.7.3'
-    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-core', version: '4.7.3'
-    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-opt', version: '4.7.3'
-    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-proxy', version: '4.7.3'
-    implementation group: 'org.apache.flex.blazeds', name: 'flex-messaging-remoting', version: '4.7.3'
+    api group: 'org.apache.flex.blazeds', name: 'flex-messaging-common', version: '4.7.3'
+    api group: 'org.apache.flex.blazeds', name: 'flex-messaging-core', version: '4.7.3'
+    api group: 'org.apache.flex.blazeds', name: 'flex-messaging-opt', version: '4.7.3'
+    api group: 'org.apache.flex.blazeds', name: 'flex-messaging-proxy', version: '4.7.3'
+    api group: 'org.apache.flex.blazeds', name: 'flex-messaging-remoting', version: '4.7.3'
 
     testImplementation 'junit:junit:4.12'
 }
@@ -30,5 +31,8 @@ dependencies {
 jar {
     manifest {
         attributes 'Implementation-Title': rootProject.name, 'Implementation-Version': version, 'Main-Class': mainClassName
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
