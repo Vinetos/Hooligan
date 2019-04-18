@@ -59,10 +59,11 @@ public class StringUtils {
         for (; i < length; i++) {
             char c = str.charAt(i);
             if (c < '0' || c > '9') {
-                if (c != '.' || dotCount > 1)
-                    return false;
-                else
-                    dotCount++;
+                if(c == '.') {
+                    if(++dotCount > 1)
+                        return false;
+                }
+                else return false;
             }
         }
         return true;
