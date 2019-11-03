@@ -2,6 +2,7 @@ package com.safexty.hooligan;
 
 import com.safexty.hooligan.network.messages.out.LoginMessage;
 import com.safexty.hooligan.network.objects.out.LoginObject;
+import com.safexty.hooligan.parser.LoginParser;
 import com.safexty.hooligan.utils.ObjectTranslator;
 import flex.messaging.io.amf.ASObject;
 import flex.messaging.io.amf.client.AMFConnection;
@@ -18,6 +19,7 @@ public class Hooligan {
     public static final String GATEWAY_URL = "http://web-alerte.sdis38.fr:18080/systel-alerte-web/gateway";
 
     public static void main(String[] args) {
+        System.out.println("Starting...");
         if (args.length < 1)
             error("No enough args given");
 
@@ -29,7 +31,7 @@ public class Hooligan {
             amfConnection.connect(GATEWAY_URL);
             amfConnection.addHttpRequestHeader("Content-type", "application/x-amf");
             if (command == LOGIN) {
-                if (args.length < 2)
+                if (args.length < command.getArgumentsCount())
                     error("Username or password missing");
 
                 var loginObject = new LoginObject(args[0], args[1]);
@@ -38,7 +40,13 @@ public class Hooligan {
                 // Send the request and parse the answer from the server.
                 var answer = (AcknowledgeMessage) amfConnection.call("null", msg);
                 var body = (ASObject) answer.getBody();
-                System.out.println(ObjectTranslator.toJson(body));
+                LoginParser loginParser = new LoginParser(ObjectTranslator.toJson(body));
+                System.out.println(loginParser.isConnected());
+                System.out.println(loginParser.getRegistrationNumber());
+                System.out.println(loginParser.getFullName());
+                System.out.println(loginParser.getRank());
+                System.out.println(loginParser.getCenterName());
+                System.out.println(loginParser.getCenterNumber());
             }
 
         } catch (ClientStatusException | ServerStatusException e) {
