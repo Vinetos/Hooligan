@@ -1,7 +1,11 @@
 package com.safexty.hooligan;
 
 import com.safexty.hooligan.network.messages.out.LoginMessage;
+import com.safexty.hooligan.network.messages.out.ResearchMembers;
+import com.safexty.hooligan.network.messages.out.ReseachSynopticMessage;
 import com.safexty.hooligan.network.objects.out.LoginObject;
+import com.safexty.hooligan.network.objects.out.ResearchMembersObject;
+import com.safexty.hooligan.network.objects.out.ResearchSynopticObject;
 import com.safexty.hooligan.parser.LoginParser;
 import com.safexty.hooligan.utils.ObjectTranslator;
 import flex.messaging.io.amf.ASObject;
@@ -13,6 +17,7 @@ import flex.messaging.messages.AcknowledgeMessage;
 import java.util.Arrays;
 
 import static com.safexty.hooligan.Command.LOGIN;
+import static com.safexty.hooligan.Command.MEMBERS_RESEARCH;
 
 public class Hooligan {
 
@@ -47,6 +52,18 @@ public class Hooligan {
                 System.out.println(loginParser.getRank());
                 System.out.println(loginParser.getCenterName());
                 System.out.println(loginParser.getCenterNumber());
+            } else if (command == MEMBERS_RESEARCH) {
+                if (args.length < command.getArgumentsCount())
+                    error("centerNumber is missing");
+
+                //var loginmsg = new LoginMessage(new LoginObject("vchassignol", "4o062")).getRawMessage();
+                var msg = new ResearchMembers(new ResearchMembersObject(Integer.parseInt(args[0]))).getRawMessage();
+
+                // Send the request and parse the answer from the server.
+                //amfConnection.call("null", loginmsg);
+                var answer = (AcknowledgeMessage) amfConnection.call("null", msg);
+                var body = (ASObject) answer.getBody();
+                System.out.println(ObjectTranslator.toJson(body));
             }
 
         } catch (ClientStatusException | ServerStatusException e) {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
+
 public class LoginParser {
 
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -18,6 +20,7 @@ public class LoginParser {
 
     public LoginParser(String theJson) {
         this.theJson = theJson;
+        System.out.println(theJson);
         parseJson();
     }
 
