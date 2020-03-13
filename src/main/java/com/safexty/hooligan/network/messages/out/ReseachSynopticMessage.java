@@ -1,9 +1,13 @@
-package com.safexty.hooligan;
+package com.safexty.hooligan.network.messages.out;
 
-import java.util.stream.Stream;
+import com.safexty.hooligan.network.messages.HooliganMessage;
+import com.safexty.hooligan.network.objects.out.LoginObject;
+import com.safexty.hooligan.network.objects.out.ResearchSynopticObject;
+import flex.messaging.messages.RemotingMessage;
+import flex.messaging.util.UUIDUtils;
 
 /**
- * File <b>Command</b> located on com.safexty.hooligan
+ * File <b>ReseachSynopticMessage</b> located on com.safexty.hooligan.network.messages.out
  * Hooligan is a part of SAFExTY Project.
  * <p>
  *   ____    _    _____ _____      _______   __       :::     ::: ::::::::::: ::::    ::: :::::::::: ::::::::::: ::::::::   ::::::::
@@ -32,42 +36,29 @@ import java.util.stream.Stream;
  * <p>
  *
  * @author Valentin Chassignol (Valentin), {@literal <contact@vinetos.fr>}, https://www.vinetos.fr
- * Created the 18/04/2019 17:12
+ * Created the 04/11/2019 14:18
  * @version 0.0.1
  * @since 0.0.1
  *
  * <p>
- * All commands available in the program
+ * The synoptic message
  */
-public enum Command {
+public class ReseachSynopticMessage extends HooliganMessage<RemotingMessage> {
 
-    LOGIN("login", new String[]{"user", "password"}),
-    MEMBERS_RESEARCH("members_research", new String[]{"centerNumber"}),
-    SYNOPTIC_RESEARCH("synoptic_research", new String[]{"centerNumber"}),
-    OTHER("", null);
+    private final ResearchSynopticObject researchSynopticObject;
 
-    private final String command;
-    private final String[] arguments;
-
-    Command(String command, String[] arguments) {
-        this.command = command;
-        this.arguments = arguments;
+    public ReseachSynopticMessage(ResearchSynopticObject researchSynopticObject) {
+        super("rechercheSynoptiqueCentre", "CentreService");
+        this.researchSynopticObject = researchSynopticObject;
     }
 
-    public String getCommand() {
-        return command;
+    @Override
+    public RemotingMessage getRawMessage() {
+        var msg = new RemotingMessage();
+        msg.setOperation(getOperation());
+        msg.setDestination(getDestination());
+        msg.setMessageId(UUIDUtils.createUUID());
+        msg.setBody(new Object[]{researchSynopticObject.createObject()});
+        return msg;
     }
-
-    public String[] getArguments() {
-        return arguments;
-    }
-
-    public int getArgumentsCount() {
-        return arguments == null ? 0 : arguments.length;
-    }
-
-    public static Command getCommandFromString(final String str) {
-        return Stream.of(Command.values()).filter(c -> c.getCommand().equalsIgnoreCase(str)).findFirst().orElse(OTHER);
-    }
-
 }

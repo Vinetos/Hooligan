@@ -1,5 +1,6 @@
 package com.safexty.hooligan;
 
+import com.safexty.hooligan.firebase.NotificationManager;
 import com.safexty.hooligan.network.messages.out.LoginMessage;
 import com.safexty.hooligan.network.messages.out.ResearchMembers;
 import com.safexty.hooligan.network.messages.out.ReseachSynopticMessage;
@@ -7,6 +8,7 @@ import com.safexty.hooligan.network.objects.out.LoginObject;
 import com.safexty.hooligan.network.objects.out.ResearchMembersObject;
 import com.safexty.hooligan.network.objects.out.ResearchSynopticObject;
 import com.safexty.hooligan.parser.LoginParser;
+import com.safexty.hooligan.parser.MembersParser;
 import com.safexty.hooligan.utils.ObjectTranslator;
 import flex.messaging.io.amf.ASObject;
 import flex.messaging.io.amf.client.AMFConnection;
@@ -16,8 +18,7 @@ import flex.messaging.messages.AcknowledgeMessage;
 
 import java.util.Arrays;
 
-import static com.safexty.hooligan.Command.LOGIN;
-import static com.safexty.hooligan.Command.MEMBERS_RESEARCH;
+import static com.safexty.hooligan.Command.*;
 
 public class Hooligan {
 
@@ -28,17 +29,20 @@ public class Hooligan {
         if (args.length < 1)
             error("No enough args given");
 
+        //NotificationManager.initialize();
+        //NotificationManager.sendNotification("titre", "pas titre");
+
         Command command = Command.getCommandFromString(args[0]);
         args = Arrays.copyOfRange(args, 1, args.length); //Extract command from array
         AMFConnection amfConnection = new AMFConnection();
         boolean error = false;
         try {
             amfConnection.connect(GATEWAY_URL);
-            amfConnection.addHttpRequestHeader("Content-type", "application/x-amf");
-            if (command == LOGIN) {
-                if (args.length < command.getArgumentsCount())
-                    error("Username or password missing");
 
+            if (args.length < command.getArgumentsCount())
+                error("Missing argument (one or more): " + String.join(",", command.getArguments()));
+
+            if (command == LOGIN) {
                 var loginObject = new LoginObject(args[0], args[1]);
                 var msg = new LoginMessage(loginObject).getRawMessage();
 
@@ -53,11 +57,19 @@ public class Hooligan {
                 System.out.println(loginParser.getCenterName());
                 System.out.println(loginParser.getCenterNumber());
             } else if (command == MEMBERS_RESEARCH) {
-                if (args.length < command.getArgumentsCount())
-                    error("centerNumber is missing");
 
                 //var loginmsg = new LoginMessage(new LoginObject("vchassignol", "4o062")).getRawMessage();
                 var msg = new ResearchMembers(new ResearchMembersObject(Integer.parseInt(args[0]))).getRawMessage();
+
+                // Send the request and parse the answer from the server.
+                //amfConnection.call("null", loginmsg);
+                var answer = (AcknowledgeMessage) amfConnection.call("null", msg);
+                var body = (ASObject) answer.getBody();
+                MembersParser membersParser = new MembersParser(ObjectTranslator.toJson(body));
+                System.out.println(ObjectTranslator.toJson(body));
+            } else if (command == SYNOPTIC_RESEARCH) {
+                //var loginmsg = new LoginMessage(new LoginObject("vchassignol", "4o062")).getRawMessage();
+                var msg = new ReseachSynopticMessage(new ResearchSynopticObject(Integer.parseInt(args[0]))).getRawMessage();
 
                 // Send the request and parse the answer from the server.
                 //amfConnection.call("null", loginmsg);

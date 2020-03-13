@@ -20,7 +20,6 @@ public class LoginParser {
 
     public LoginParser(String theJson) {
         this.theJson = theJson;
-        System.out.println(theJson);
         parseJson();
     }
 
