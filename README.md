@@ -14,13 +14,12 @@ cd Hooligan
 gradlew clean build
 ```
 
-File will be located in `build/libs/Hooligan-0.0.1.jar`
+File will be located in `build/libs/Hooligan-1.0.0.jar`
 
 # Usage
 ```
-# Launch the jar
-java -jar ./build/libs/Hooligan-0.0.1.jar <command> [args...]
-
-# Login Example : 
-java -jar ./build/libs/Hooligan-0.0.1.jar login username password
+# Launch the application
+java -jar ./build/libs/Hooligan-1.0.0.jar
 ```
+
+The first time, the application will generate `config.yml`. Configure it !

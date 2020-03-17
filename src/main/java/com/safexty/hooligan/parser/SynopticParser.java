@@ -12,7 +12,6 @@ import java.util.Optional;
 public class SynopticParser {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static int n = 0;
 
     public static void parseJson(String theJson) {
         try {

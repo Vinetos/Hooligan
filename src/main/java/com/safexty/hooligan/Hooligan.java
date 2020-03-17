@@ -17,41 +17,14 @@ import flex.messaging.io.amf.ASObject;
 public class Hooligan {
 
     private static boolean logged = false;
+    private static int centerNumber = -1;
 
     public static void main(String[] args) {
-        ConfigLoader.initialize();
-        while (true) {
-            long start = System.currentTimeMillis();
-            LoggerUtils.info("Requesting synoptic...");
-            var msg = new ReseachSynopticMessage(new ResearchSynopticObject(202)).getRawMessage();
-            var answer = NetworkManager.request(msg);
-
-            if (answer == null) {
-                LoggerUtils.error("Failed ! Resetting.");
-                logged = false;
-            }
-            var body = (ASObject) answer.getBody();
-            SynopticParser.parseJson(ObjectTranslator.toJson(body));
-            LoggerUtils.info("Sleeping...");
-            // Avoid spamming
-            long cooldown = 10000 - (System.currentTimeMillis() - start);
-            if (cooldown > 0) {
-                try {
-                    Thread.sleep(cooldown);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void main2(String[] args) {
         LoggerUtils.info("Welcome to Hooligan !");
         ConfigLoader.initialize();
         NotificationManager.initialize();
         while (true) {
             long start = System.currentTimeMillis();
-            var centerNumber = -1;
             if (!logged) {
                 LoggerUtils.info("Logging in...");
                 // Login Request
