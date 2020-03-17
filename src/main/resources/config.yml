@@ -1,0 +1,13 @@
+user: "myUser"
+password: "NicePWD123"
+gatewayUrl: "http://www.example.com/endpoint"
+cooldown: 10
+firebase:
+  credentials: "/path/to/<project>-firebase.json"
+  databaseUrl: "https://<you>.firebaseio.com/"
+  notificationTokens:
+    - "myToken1"
+    - "myToken2"
+notification:
+  title: "Notification for %nfirstName% %lastName%"
+  body: "Changed %state% to %newState%"

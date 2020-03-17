@@ -133,3 +133,4 @@ gradle-app.setting
 ### Local project ignored files ###
 
 docs
+config.yml

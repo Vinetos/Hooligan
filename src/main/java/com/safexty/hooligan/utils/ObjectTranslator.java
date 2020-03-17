@@ -56,6 +56,8 @@ public class ObjectTranslator {
         StringBuilder buffer = new StringBuilder("{");
         // True is the object has more than one pair in the entrySet
         boolean pairEmitted = false;
+        if(object == null)
+            return "";
         for (Object o : object.entrySet()) {
             if (pairEmitted) // Add , before the next object
                 buffer.append(",");

@@ -1,5 +1,10 @@
 package com.safexty.hooligan;
 
+import com.safexty.hooligan.firebase.NotificationManager;
+import com.safexty.hooligan.utils.ConfigLoader;
+import com.safexty.hooligan.utils.LoggerUtils;
+import com.safexty.hooligan.utils.config.Config;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,15 +15,13 @@ public class User {
 
     private final String firstname;
     private final String lastname;
-    private String dispoCode;
+    private String dispoCode = "Vide";
+    private boolean updated = false;
 
-    public User(String firstname, String lastname) {
-        this(firstname, lastname, null);
-    }
     public User(String firstname, String lastname, String dispoCode) {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.dispoCode = dispoCode;
+        setDispoCode(dispoCode);
         users.add(this);
     }
 
@@ -35,10 +38,47 @@ public class User {
     }
 
     public void setDispoCode(String dispoCode) {
+        setUpdated(true);
+        if (this.dispoCode.equals(dispoCode))
+            return;
+        var title = ConfigLoader.getConfig().notification.title
+                .replaceAll("%nfirstName%", getFirstname())
+                .replaceAll("%lastName%", getLastname())
+                .replaceAll("%state%", getDispoCode())
+                .replaceAll("%newState%", dispoCode);
+
+        var content = ConfigLoader.getConfig().notification.body
+                .replaceAll("%nfirstName%", getFirstname())
+                .replaceAll("%lastName%", getLastname())
+                .replaceAll("%state%", getDispoCode())
+                .replaceAll("%newState%", dispoCode);
+
+        NotificationManager.buildNotification(
+                title,
+                content
+        );
         this.dispoCode = dispoCode;
     }
 
-    public static Optional<User> findByName(String name) {
-        return users.stream().filter(u -> u.getLastname().toLowerCase().contains(name.toLowerCase())).findAny();
+    public void update() {
+        if (isUpdated())
+            setUpdated(false);
+        else
+            setDispoCode("Vide");
+    }
+
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
+    public static Optional<User> findByName(String name, String firstName) {
+        return users.stream().filter(u ->
+                u.getLastname().toLowerCase().contains(name.toLowerCase()) &&
+                        u.getFirstname().toLowerCase().contains(firstName.toLowerCase())
+        ).findAny();
     }
 }
