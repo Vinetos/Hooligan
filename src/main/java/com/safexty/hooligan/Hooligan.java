@@ -31,27 +31,33 @@ public class Hooligan {
                 var loginmsg = new LoginMessage(new LoginObject(ConfigLoader.getConfig().user, ConfigLoader.getConfig().password)).getRawMessage();
                 // Send the request and parse the answer from the server.
                 var parser = new LoginParser(ObjectTranslator.toJson((ASObject) NetworkManager.request(loginmsg).getBody()));
-                if (!parser.isConnected()) {
-                    LoggerUtils.error("Failed to connect ! Exiting.");
+                if (!parser.isConnected() && !parser.hasFailed()) {
+                    LoggerUtils.error("Wrong username or password ! Exiting.");
                     System.exit(1);
                 }
-                centerNumber = parser.getCenterNumber();
-                LoggerUtils.info("Connected as " + parser.getRank() + " " + parser.getFullName() + " (" + parser.getRegistrationNumber() + ")");
-                logged = true;
+                if (parser.hasFailed()) {
+                    LoggerUtils.error("Failed to log in ! Retrying...");
+                } else {
+                    centerNumber = parser.getCenterNumber();
+                    LoggerUtils.info("Connected as " + parser.getRank() + " " + parser.getFullName() + " (" + parser.getRegistrationNumber() + ")");
+                    logged = parser.isConnected();
+                }
+            }
+            if (logged) {
+                LoggerUtils.info("Requesting synoptic...");
+                var msg = new ReseachSynopticMessage(new ResearchSynopticObject(centerNumber)).getRawMessage();
+                var answer = NetworkManager.request(msg);
+
+                if (answer == null) {
+                    LoggerUtils.error("Failed ! Resetting.");
+                    logged = false;
+                    continue;
+                }
+                var body = (ASObject) answer.getBody();
+                SynopticParser.parseJson(ObjectTranslator.toJson(body));
+                LoggerUtils.info("Sleeping...");
             }
 
-            LoggerUtils.info("Requesting synoptic...");
-            var msg = new ReseachSynopticMessage(new ResearchSynopticObject(centerNumber)).getRawMessage();
-            var answer = NetworkManager.request(msg);
-
-            if (answer == null) {
-                LoggerUtils.error("Failed ! Resetting.");
-                logged = false;
-                continue;
-            }
-            var body = (ASObject) answer.getBody();
-            SynopticParser.parseJson(ObjectTranslator.toJson(body));
-            LoggerUtils.info("Sleeping...");
             // Avoid spamming
             long cooldown = 10000 - (System.currentTimeMillis() - start);
             if (cooldown > 0) {

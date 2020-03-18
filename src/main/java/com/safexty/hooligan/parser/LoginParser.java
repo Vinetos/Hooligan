@@ -17,6 +17,7 @@ public class LoginParser {
     private String rank;
     private int centerNumber = 0;
     private String centerName;
+    private boolean failed = false;
 
     public LoginParser(String theJson) {
         this.theJson = theJson;
@@ -26,6 +27,11 @@ public class LoginParser {
     private void parseJson() {
         try {
             var rootNode = mapper.readTree(theJson).get("connexion");
+            // Error in answer
+            if (rootNode == null) {
+                failed = true;
+                return;
+            }
             connected = rootNode.get("connexionAutorisee").asBoolean(false);
             if (isConnected()) {
                 fullName = rootNode.get("nomPersonnelConnecte").asText(null);
@@ -43,6 +49,10 @@ public class LoginParser {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean hasFailed() {
+        return failed;
     }
 
     public boolean isConnected() {
