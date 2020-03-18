@@ -4,7 +4,7 @@ plugins {
     id 'java-library'
 }
 
-version = '1.0.0'
+version = '1.0.2'
 group = 'com.safexty'
 mainClassName = 'com.safexty.hooligan.Hooligan'
 

@@ -56,7 +56,7 @@ public class ObjectTranslator {
         StringBuilder buffer = new StringBuilder("{");
         // True is the object has more than one pair in the entrySet
         boolean pairEmitted = false;
-        if(object == null)
+        if (object == null)
             return "";
         for (Object o : object.entrySet()) {
             if (pairEmitted) // Add , before the next object
@@ -84,7 +84,10 @@ public class ObjectTranslator {
                 for (Object o2 : (ArrayCollection) valueObj) {
                     if (pairPermitted2)
                         buffer.append(",");
-                    buffer.append(toJson((ASObject) o2));
+                    if (o2 instanceof ASObject)
+                        buffer.append(toJson((ASObject) o2));
+                    else
+                        buffer.append(o2);
                     pairPermitted2 = true;
                 }
                 buffer.append("]");
