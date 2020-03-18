@@ -80,7 +80,7 @@ public class NotificationManager {
 
             @Override
             public void onSuccess(BatchResponse result) {
-                LoggerUtils.info("Sent with " + result.getFailureCount() + "/" + result.getSuccessCount() + "failures.");
+                LoggerUtils.info("Sent with " + result.getFailureCount() + "/" + result.getSuccessCount() + " failures.");
                 messages.clear();
             }
 
