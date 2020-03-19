@@ -59,7 +59,7 @@ public class Hooligan {
             }
 
             // Avoid spamming
-            long cooldown = ConfigLoader.getConfig().cooldown - (System.currentTimeMillis() - start);
+            long cooldown = ConfigLoader.getConfig().cooldown*1000 - (System.currentTimeMillis() - start);
             if (cooldown > 0) {
                 try {
                     Thread.sleep(cooldown);
