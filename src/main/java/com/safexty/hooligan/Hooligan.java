@@ -11,7 +11,6 @@ import com.safexty.hooligan.parser.SynopticParser;
 import com.safexty.hooligan.utils.ConfigLoader;
 import com.safexty.hooligan.utils.LoggerUtils;
 import com.safexty.hooligan.utils.ObjectTranslator;
-import com.safexty.hooligan.utils.config.Config;
 import flex.messaging.io.amf.ASObject;
 
 public class Hooligan {
@@ -22,7 +21,8 @@ public class Hooligan {
     public static void main(String[] args) {
         LoggerUtils.info("Welcome to Hooligan !");
         ConfigLoader.initialize();
-        NotificationManager.initialize();
+        if(ConfigLoader.getConfig().sendNotification)
+            NotificationManager.initialize();
         while (true) {
             long start = System.currentTimeMillis();
             if (!logged) {
@@ -59,7 +59,7 @@ public class Hooligan {
             }
 
             // Avoid spamming
-            long cooldown = 10000 - (System.currentTimeMillis() - start);
+            long cooldown = ConfigLoader.getConfig().cooldown - (System.currentTimeMillis() - start);
             if (cooldown > 0) {
                 try {
                     Thread.sleep(cooldown);

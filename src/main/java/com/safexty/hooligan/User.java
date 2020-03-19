@@ -39,7 +39,7 @@ public class User {
 
     public void setDispoCode(String dispoCode) {
         setUpdated(true);
-        if (this.dispoCode.equals(dispoCode))
+        if (this.dispoCode.equals(dispoCode) || !ConfigLoader.getConfig().sendNotification)
             return;
         var title = ConfigLoader.getConfig().notification.title
                 .replaceAll("%nfirstName%", getFirstname())

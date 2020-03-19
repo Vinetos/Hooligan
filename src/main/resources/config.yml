@@ -2,6 +2,7 @@ user: "myUser"
 password: "NicePWD123"
 gatewayUrl: "http://www.example.com/endpoint"
 cooldown: 10
+sendNotification: true
 firebase:
   credentials: "/path/to/<project>-firebase.json"
   databaseUrl: "https://<you>.firebaseio.com/"
