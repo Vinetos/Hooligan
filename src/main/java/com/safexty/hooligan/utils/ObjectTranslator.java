@@ -93,7 +93,12 @@ public class ObjectTranslator {
                 buffer.append("]");
             }
             // It's a common type (number, boolean)
-            else if (isNumber(value) || "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value))
+            else if (isNumber(value))
+                if (value.contains("."))
+                    buffer.append(Double.parseDouble(value));
+                else
+                    buffer.append(Long.parseLong(value));
+            else if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value))
                 buffer.append(valueObj);
                 // Otherwise "value"
             else
