@@ -7,6 +7,7 @@ import com.safexty.hooligan.User;
 import com.safexty.hooligan.firebase.NotificationManager;
 import com.safexty.hooligan.utils.LoggerUtils;
 
+import java.io.Console;
 import java.util.Optional;
 
 public class SynopticParser {

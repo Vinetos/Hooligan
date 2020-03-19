@@ -74,11 +74,8 @@ public class ObjectTranslator {
                 continue;
             }
             String value = valueObj.toString();
-            // It's another object
-            if (valueObj instanceof ASObject)
-                buffer.append(toJson((ASObject) valueObj));
-                // It' an array of objects
-            else if (valueObj instanceof ArrayCollection) {
+            // It's an array of objects
+            if (valueObj instanceof ArrayCollection) {
                 buffer.append("[");
                 boolean pairPermitted2 = false;
                 for (Object o2 : (ArrayCollection) valueObj) {
@@ -92,6 +89,9 @@ public class ObjectTranslator {
                 }
                 buffer.append("]");
             }
+            // It's another object
+            else if (valueObj instanceof ASObject)
+                buffer.append(toJson((ASObject) valueObj));
             // It's a common type (number, boolean)
             else if (isNumber(value))
                 if (value.contains("."))
