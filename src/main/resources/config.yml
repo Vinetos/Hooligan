@@ -10,5 +10,9 @@ firebase:
     - "myToken1"
     - "myToken2"
 notification:
-  title: "Notification for %nfirstName% %lastName%"
-  body: "Changed %state% to %newState%"
+  user:
+    title: "Notification for %nfirstName% %lastName%"
+    body: "Changed %state% to %newState%"
+  truck:
+    title: "%functionName% (%truckName%)"
+    body: "Changed %state% to %newState%"

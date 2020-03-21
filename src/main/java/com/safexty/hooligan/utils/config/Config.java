@@ -7,5 +7,5 @@ public class Config {
     public int cooldown;
     public boolean sendNotification;
     public FirebaseConfig firebase;
-    public NotificationConfig notification;
+    public NotificationsConfig notification;
 }

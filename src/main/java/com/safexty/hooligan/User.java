@@ -2,8 +2,6 @@ package com.safexty.hooligan;
 
 import com.safexty.hooligan.firebase.NotificationManager;
 import com.safexty.hooligan.utils.ConfigLoader;
-import com.safexty.hooligan.utils.LoggerUtils;
-import com.safexty.hooligan.utils.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +39,13 @@ public class User {
         setUpdated(true);
         if (this.dispoCode.equals(dispoCode) || !ConfigLoader.getConfig().sendNotification)
             return;
-        var title = ConfigLoader.getConfig().notification.title
+        var title = ConfigLoader.getConfig().notification.user.title
                 .replaceAll("%nfirstName%", getFirstname())
                 .replaceAll("%lastName%", getLastname())
                 .replaceAll("%state%", getDispoCode())
                 .replaceAll("%newState%", dispoCode);
 
-        var content = ConfigLoader.getConfig().notification.body
+        var content = ConfigLoader.getConfig().notification.user.body
                 .replaceAll("%nfirstName%", getFirstname())
                 .replaceAll("%lastName%", getLastname())
                 .replaceAll("%state%", getDispoCode())
