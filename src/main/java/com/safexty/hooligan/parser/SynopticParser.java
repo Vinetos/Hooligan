@@ -50,14 +50,18 @@ public class SynopticParser {
             else
                 for (final JsonNode objNode : rootNode) {
                     var fonctionEngin = objNode.get("fonctionEnginEngagee").asText("");
+                    var sinistre = objNode.get("libelleSinistre").asText("");
                     var engin = objNode.get("engin");
                     var enginName = engin.get("libelleEngin").asText("");
                     var etatEngin = engin.get("etatEngin").get("nomEtat").asText("Vide");
                     var truck = AlertedTruck.findByName(enginName);
                     if (truck.isEmpty())
-                        new AlertedTruck(enginName, fonctionEngin, etatEngin);
-                    else
-                        truck.get().setEtat(etatEngin);
+                        new AlertedTruck(enginName, fonctionEngin, etatEngin, sinistre);
+                    else {
+                        var truckO = truck.get();
+                        truckO.setEtat(etatEngin);
+                        truckO.setSinister(sinistre);
+                    }
                 }
 
             LoggerUtils.info("Done ! Updating users and trucks...");

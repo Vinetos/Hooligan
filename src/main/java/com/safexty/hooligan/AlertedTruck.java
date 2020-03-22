@@ -14,11 +14,13 @@ public class AlertedTruck {
     private final String name;
     private final String fonction;
     private String etat = "Vide";
+    private String sinister = "";
     private boolean updated = false;
 
-    public AlertedTruck(String name, String fonction, String etat) {
+    public AlertedTruck(String name, String fonction, String etat, String sinister) {
         this.name = name;
         this.fonction = fonction;
+        this.sinister = sinister;
         setEtat(etat);
         alertedTrucks.add(this);
     }
@@ -35,6 +37,14 @@ public class AlertedTruck {
         return etat;
     }
 
+    public String getSinister() {
+        return sinister;
+    }
+
+    public void setSinister(String sinister) {
+        this.sinister = sinister;
+    }
+
     public void setEtat(String etat) {
         setUpdated(true);
         if (this.etat.equals(etat) || !ConfigLoader.getConfig().sendNotification)
@@ -42,12 +52,14 @@ public class AlertedTruck {
         var title = ConfigLoader.getConfig().notification.truck.title
                 .replaceAll("%state%", getEtat())
                 .replaceAll("%newState%", etat)
+                .replaceAll("%sinister%", getSinister())
                 .replaceAll("%functionName%", getFonction())
                 .replaceAll("%truckName%", getName());
 
         var content = ConfigLoader.getConfig().notification.truck.body
                 .replaceAll("%state%", getEtat())
                 .replaceAll("%newState%", etat)
+                .replaceAll("%sinister%", getSinister())
                 .replaceAll("%functionName%", getFonction())
                 .replaceAll("%truckName%", getName());
 
@@ -61,8 +73,10 @@ public class AlertedTruck {
     public void update() {
         if (isUpdated())
             setUpdated(false);
-        else
+        else {
             setEtat("Vide");
+            setSinister("");
+        }
     }
 
     public boolean isUpdated() {

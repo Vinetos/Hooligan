@@ -15,4 +15,4 @@ notification:
     body: "Changed %state% to %newState%"
   truck:
     title: "%functionName% (%truckName%)"
-    body: "Changed %state% to %newState%"
+    body: "Changed %state% to %newState% for %sinister%"
