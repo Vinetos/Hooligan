@@ -3,6 +3,7 @@ package com.safexty.hooligan.utils;
 import flex.messaging.io.ArrayCollection;
 import flex.messaging.io.amf.ASObject;
 
+import java.awt.desktop.SystemSleepEvent;
 import java.util.Map;
 
 import static com.safexty.hooligan.utils.StringUtils.isNumber;
@@ -81,10 +82,25 @@ public class ObjectTranslator {
                 for (Object o2 : (ArrayCollection) valueObj) {
                     if (pairPermitted2)
                         buffer.append(",");
+                    // TODO: 22/03/2020 Code duplication
+                    if (o2 == null) {
+                        buffer.append("null");
+                        pairPermitted2 = true;
+                        continue;
+                    }
+                    String value2 = o2.toString();
                     if (o2 instanceof ASObject)
                         buffer.append(toJson((ASObject) o2));
-                    else
+                    else if (isNumber(value2))
+                        if (value2.contains("."))
+                            buffer.append(Double.parseDouble(value2));
+                        else
+                            buffer.append(Long.parseLong(value2));
+                    else if ("true".equalsIgnoreCase(value2) || "false".equalsIgnoreCase(value2))
                         buffer.append(o2);
+                        // Otherwise "value"
+                    else
+                        buffer.append('"').append(value2).append('"');
                     pairPermitted2 = true;
                 }
                 buffer.append("]");
@@ -92,7 +108,7 @@ public class ObjectTranslator {
             // It's another object
             else if (valueObj instanceof ASObject)
                 buffer.append(toJson((ASObject) valueObj));
-            // It's a common type (number, boolean)
+                // It's a common type (number, boolean)
             else if (isNumber(value))
                 if (value.contains("."))
                     buffer.append(Double.parseDouble(value));
