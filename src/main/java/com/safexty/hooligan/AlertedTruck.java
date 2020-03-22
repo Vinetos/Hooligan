@@ -13,7 +13,7 @@ public class AlertedTruck {
 
     private final String name;
     private final String fonction;
-    private String etat = "";
+    private String etat = "Vide";
     private boolean updated = false;
 
     public AlertedTruck(String name, String fonction, String etat) {
@@ -62,7 +62,7 @@ public class AlertedTruck {
         if (isUpdated())
             setUpdated(false);
         else
-            setEtat("Dispo");
+            setEtat("Vide");
     }
 
     public boolean isUpdated() {

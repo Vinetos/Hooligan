@@ -19,6 +19,7 @@ public class SynopticParser {
         try {
             LoggerUtils.info("Ok ! Parsing answer...");
             var tree = mapper.readTree(theJson);
+            System.out.println(theJson);
             var rootNode = tree.get("lesPersonnels");
             if (rootNode == null)
                 return;
@@ -52,7 +53,7 @@ public class SynopticParser {
                     var fonctionEngin = objNode.get("fonctionEnginEngagee").asText("");
                     var engin = objNode.get("engin");
                     var enginName = engin.get("libelleEngin").asText("");
-                    var etatEngin = engin.get("etatEngin").get("codeEtat").asText("");
+                    var etatEngin = engin.get("etatEngin").get("nomEtat").asText("Vide");
                     var truck = AlertedTruck.findByName(enginName);
                     if (truck.isEmpty())
                         new AlertedTruck(enginName, fonctionEngin, etatEngin);
