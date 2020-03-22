@@ -19,7 +19,6 @@ public class SynopticParser {
         try {
             LoggerUtils.info("Ok ! Parsing answer...");
             var tree = mapper.readTree(theJson);
-            System.out.println(theJson);
             var rootNode = tree.get("lesPersonnels");
             if (rootNode == null)
                 return;
