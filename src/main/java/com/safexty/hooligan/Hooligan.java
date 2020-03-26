@@ -21,7 +21,7 @@ public class Hooligan {
     public static void main(String[] args) {
         LoggerUtils.info("Welcome to Hooligan !");
         ConfigLoader.initialize();
-        if(ConfigLoader.getConfig().sendNotification)
+        if (ConfigLoader.getConfig().sendNotification)
             NotificationManager.initialize();
         while (true) {
             long start = System.currentTimeMillis();
@@ -30,7 +30,10 @@ public class Hooligan {
                 // Login Request
                 var loginmsg = new LoginMessage(new LoginObject(ConfigLoader.getConfig().user, ConfigLoader.getConfig().password)).getRawMessage();
                 // Send the request and parse the answer from the server.
-                var parser = new LoginParser(ObjectTranslator.toJson((ASObject) NetworkManager.request(loginmsg).getBody()));
+                var request = NetworkManager.request(loginmsg);
+                if (request == null)
+                    continue;
+                var parser = new LoginParser(ObjectTranslator.toJson((ASObject) request.getBody()));
                 if (!parser.isConnected() && !parser.hasFailed()) {
                     LoggerUtils.error("Wrong username or password ! Exiting.");
                     System.exit(1);
@@ -59,7 +62,7 @@ public class Hooligan {
             }
 
             // Avoid spamming
-            long cooldown = ConfigLoader.getConfig().cooldown*1000 - (System.currentTimeMillis() - start);
+            long cooldown = ConfigLoader.getConfig().cooldown * 1000 - (System.currentTimeMillis() - start);
             if (cooldown > 0) {
                 try {
                     Thread.sleep(cooldown);
